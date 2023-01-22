@@ -1,64 +1,24 @@
 const express = require("express");
+const {
+  createPost,
+  getPost,
+  getPosts,
+} = require("../../controllers/posts/posts.controller");
 
 const postRouter = express.Router();
 
 //POST/api/v1/posts
-postRouter.post("/", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "post created",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRouter.post("/", createPost);
 //POST/api/v1/posts
-postRouter.get("/", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "all posts",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRouter.get("/", getPosts);
 
 //GET/api/v1/posts/:id
-postRouter.get("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "one post",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRouter.get("/:id", getPost);
 
 //PUT/api/v1/posts/:id
-postRouter.put("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user update post",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRouter.put("/:id");
 
 //DELETE/api/v1/users/profile/:id
-postRouter.delete("/api/v1/users/profile/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "user delete post",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+postRouter.delete("/:id");
 
 module.exports = postRouter;
