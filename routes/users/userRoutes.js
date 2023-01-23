@@ -6,6 +6,7 @@ const {
   updateUser,
   deleteUser,
 } = require("../../controllers/users/user.controller");
+const isLogin = require("../../middlewares/isLogin");
 
 const userRouter = express.Router();
 
@@ -16,7 +17,7 @@ userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
 
 //GET/api/v1/users/profile/:id
-userRouter.get("/profile/:id", getUser);
+userRouter.get("/profile", isLogin, getUser);
 
 //PUT/api/v1/users/profile/:id
 userRouter.put("/profile/:id", updateUser);
