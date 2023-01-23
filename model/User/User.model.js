@@ -87,9 +87,8 @@ const userSchema = new mongoose.Schema(
         "Gold",
         "Platinum ",
         "Diamond",
-        "❤️Legendary",
+        "Legendary",
       ],
-      default: " Iron",
     },
   },
   {
