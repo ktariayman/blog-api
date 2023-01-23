@@ -1,12 +1,12 @@
+const { errorHandler } = require("../utils/ErrorHandler");
 const getTokenFromHeader = require("../utils/getTokenFromHeader");
 const verifyToken = require("../utils/verifyToken");
-
 const isLogin = (req, res, next) => {
   const token = getTokenFromHeader(req);
   const decodedUser = verifyToken(token);
   req.userAuth = decodedUser.id;
   if (!decodedUser) {
-    return res.json({ message: "no/invalid token , please login" });
+    return next(errorHandler("no/invalid token , please login", 500));
   } else {
     next();
   }

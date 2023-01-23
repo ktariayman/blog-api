@@ -2,16 +2,12 @@ const User = require("../../model/User/User.model");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generateToken");
 const getTokenFromHeader = require("../../utils/getTokenFromHeader");
+const { ErrorHandler, errorHandler } = require("../../utils/ErrorHandler");
 const userRegister = async (req, res) => {
   const { firstname, lastname, email, password } = req.body;
   try {
     const userExist = await User.findOne({ email });
-    if (userExist) {
-      return res.json({
-        status: "failed",
-        data: "user already exist",
-      });
-    }
+    if (userExist) return next(new ErrorHandler("user already exist", 500));
 
     //hash the password
     const salt = await bcrypt.genSalt(10);
@@ -28,7 +24,7 @@ const userRegister = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(errorHandler(error.message));
   }
 };
 
@@ -36,18 +32,13 @@ const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const userExist = await User.findOne({ email });
-    if (!userExist) {
-      return res.json({
-        status: "success",
-        data: "Wrong credentials",
-      });
-    }
+    if (!userExist)
+      return next(new ErrorHandler("Invalid Login credentials ", 500));
+
     const passwordMatch = await bcrypt.compare(password, userExist.password);
     if (!passwordMatch) {
-      return res.json({
-        status: "success",
-        data: "Wrong credentials",
-      });
+      if (!userExist)
+        return next(new ErrorHandler("Invalid Login credentials ", 500));
     }
     res.json({
       status: "success",
@@ -60,7 +51,7 @@ const userLogin = async (req, res) => {
       },
     });
   } catch (error) {
-    res.json(error.message);
+    next(errorHandler(error.message));
   }
 };
 
@@ -74,7 +65,7 @@ const getUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.json(error.message);
+    next(errorHandler(error.message));
   }
 };
 
@@ -85,7 +76,7 @@ const updateUser = async (req, res) => {
       data: "user updateprofile",
     });
   } catch (error) {
-    res.json(error.message);
+    next(errorHandler(error.message));
   }
 };
 
@@ -96,7 +87,7 @@ const deleteUser = async (req, res) => {
       data: "user delete profile",
     });
   } catch (error) {
-    res.json(error.message);
+    next(errorHandler(error.message));
   }
 };
 
