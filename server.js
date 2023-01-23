@@ -11,7 +11,7 @@ connectDB();
 const app = express();
 
 //middlewares
-
+app.use(express.json());
 // routes
 app.use(Endpoints.usersEndpoint, userRouter);
 app.use(Endpoints.postsEndpoint, postRouter);
