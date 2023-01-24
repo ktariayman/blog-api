@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generateToken");
 const getTokenFromHeader = require("../../utils/getTokenFromHeader");
 const { ErrorHandler, errorHandler } = require("../../utils/ErrorHandler");
-const userRegister = async (req, res) => {
+const userRegister = async (req, res, next) => {
   const { firstname, lastname, email, password } = req.body;
   try {
     const userExist = await User.findOne({ email });
@@ -28,7 +28,7 @@ const userRegister = async (req, res) => {
   }
 };
 
-const userLogin = async (req, res) => {
+const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const userExist = await User.findOne({ email });
@@ -55,7 +55,7 @@ const userLogin = async (req, res) => {
   }
 };
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
   try {
     const token = getTokenFromHeader(req);
     console.log(token);
@@ -69,7 +69,7 @@ const getUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
     res.json({
       status: "success",
@@ -80,7 +80,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-const uploadPhotoProfile = async (req, res) => {
+const uploadPhotoProfile = async (req, res, next) => {
   console.log(req.file);
   try {
     // find user to be uploaded
@@ -118,7 +118,7 @@ const uploadPhotoProfile = async (req, res) => {
     next(errorHandler(error.message, 500));
   }
 };
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     res.json({
       status: "success",
