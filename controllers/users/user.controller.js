@@ -80,6 +80,17 @@ const updateUser = async (req, res) => {
   }
 };
 
+const uploadPhotoProfile = async (req, res) => {
+  console.log(req.file);
+  try {
+    res.json({
+      status: "success",
+      data: "profil photo Upload",
+    });
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
 const deleteUser = async (req, res) => {
   try {
     res.json({
@@ -91,4 +102,11 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { userRegister, userLogin, getUser, updateUser, deleteUser };
+module.exports = {
+  userRegister,
+  userLogin,
+  getUser,
+  updateUser,
+  deleteUser,
+  uploadPhotoProfile,
+};
