@@ -9,6 +9,8 @@ const {
   deleteUser,
   uploadPhotoProfile,
   whoViewMyProfile,
+  following,
+  unfollowing,
 } = require("../../controllers/users/user.controller");
 const isLogin = require("../../middlewares/isLogin");
 const userRouter = express.Router();
@@ -32,6 +34,11 @@ userRouter.delete("/profile/:id", deleteUser);
 
 //GET/api/v1/users/profile-viewers/id
 userRouter.get("/profile-viewers/:id", isLogin, whoViewMyProfile);
+
+//GET/api/v1/users/following/id
+userRouter.get("/following/:id", isLogin, following);
+userRouter.get("/unfollowing/:id", isLogin, unfollowing);
+
 //POST/api/v1/users/profile-photo-upload
 userRouter.post(
   "/profile-photo-upload",

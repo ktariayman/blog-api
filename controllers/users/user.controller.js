@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generateToken");
 const getTokenFromHeader = require("../../utils/getTokenFromHeader");
 const { ErrorHandler, errorHandler } = require("../../utils/ErrorHandler");
+
 const userRegister = async (req, res, next) => {
   const { firstname, lastname, email, password } = req.body;
   try {
@@ -55,8 +56,6 @@ const userLogin = async (req, res, next) => {
   }
 };
 
-// whoViewMyProfile
-
 const whoViewMyProfile = async (req, res, next) => {
   try {
     // find the original user
@@ -82,6 +81,77 @@ const whoViewMyProfile = async (req, res, next) => {
         });
       }
     }
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
+const following = async (req, res, next) => {
+  try {
+    // find the original user
+
+    const userToFollow = await User.findById(req.params.id);
+    // find the  user who viewed the original user
+    const userWhoFollowedTheProile = await User.findById(req.userAuth);
+    if (userToFollow && userWhoFollowedTheProile) {
+      const isUserAlreadyFollowed = userToFollow.followers.find(
+        (follower) =>
+          follower.toString() === userWhoFollowedTheProile._id.toJSON()
+      );
+      if (isUserAlreadyFollowed) {
+        return next(errorHandler("you already followed this profile"));
+      } else {
+        // push the userWhoViewedTheProfile in the user's viewers
+        userToFollow.followers.push(userWhoFollowedTheProile._id);
+        userWhoFollowedTheProile.following.push(userToFollow._id);
+        // save in the database
+        await userWhoFollowedTheProile.save();
+        await userToFollow.save();
+        res.json({
+          status: "success",
+          data: "you have successfully followed the profile",
+        });
+      }
+    }
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
+
+const unfollowing = async (req, res, next) => {
+  try {
+    const userToUnfollow = await User.findById(req.params.id);
+    const userWhoUnfollowedTheProile = await User.findById(req.userAuth);
+    if (userToUnfollow && userWhoUnfollowedTheProile) {
+      const isUserAlreadyFollowed = userToUnfollow.followers.find(
+        (follower) =>
+          follower.toString() === userWhoUnfollowedTheProile._id.toString()
+      );
+      if (!isUserAlreadyFollowed) {
+        return next(errorHandler("you are not following this profile"));
+      } else {
+        // push the userWhoViewedTheProfile in the user's viewers
+        userToUnfollow.followers = userToUnfollow.followers.filter(
+          (f) => f.toString() !== userWhoUnfollowedTheProile._id.toString()
+        );
+        userWhoUnfollowedTheProile.following =
+          userWhoUnfollowedTheProile.following.filter(
+            (f) => f.toString() !== userToUnfollow._id.toString()
+          );
+
+        // save in the database
+        await userToUnfollow.save();
+        await userWhoUnfollowedTheProile.save();
+        res.json({
+          status: "success",
+          data: "you have successfully unfollowed the profile",
+        });
+      }
+    }
+
+    res.json({
+      status: "success",
+      data: "unfollow",
+    });
   } catch (error) {
     next(errorHandler(error.message));
   }
@@ -168,4 +238,6 @@ module.exports = {
   deleteUser,
   uploadPhotoProfile,
   whoViewMyProfile,
+  following,
+  unfollowing,
 };
