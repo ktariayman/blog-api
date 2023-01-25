@@ -11,6 +11,8 @@ const {
   whoViewMyProfile,
   following,
   unfollowing,
+  blockingUser,
+  unblockingUser,
 } = require("../../controllers/users/user.controller");
 const isLogin = require("../../middlewares/isLogin");
 const userRouter = express.Router();
@@ -37,7 +39,11 @@ userRouter.get("/profile-viewers/:id", isLogin, whoViewMyProfile);
 
 //GET/api/v1/users/following/id
 userRouter.get("/following/:id", isLogin, following);
+//GET/api/v1/users/unfollowing/id
 userRouter.get("/unfollowing/:id", isLogin, unfollowing);
+
+userRouter.get("/blocking/:id", isLogin, blockingUser);
+userRouter.get("/unblocking/:id", isLogin, unblockingUser);
 
 //POST/api/v1/users/profile-photo-upload
 userRouter.post(

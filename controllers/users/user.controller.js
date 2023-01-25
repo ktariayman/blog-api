@@ -156,6 +156,68 @@ const unfollowing = async (req, res, next) => {
     next(errorHandler(error.message));
   }
 };
+
+const blockingUser = async (req, res, next) => {
+  try {
+    // user to be blocked
+    const userToBlock = await User.findById(req.params.id);
+    // user who is blocking
+    const userWhoTryingToBlock = await User.findById(req.userAuth);
+    if (userWhoTryingToBlock && userToBlock) {
+      // verify is the user already exist in blocked arr
+      const isUserAlreadyBlocked = userWhoTryingToBlock.blocked.find(
+        (blocked) => blocked.toString() === userToBlock._id.toString()
+      );
+      if (isUserAlreadyBlocked) {
+        return next(errorHandler("you have already blocked this profile"));
+      }
+      // push the userToBlock in the userWhoTryingToBlock's viewers
+
+      userWhoTryingToBlock.blocked.push(userToBlock._id);
+      // save in the database
+
+      await userWhoTryingToBlock.save();
+      res.json({
+        status: "success",
+        data: " block User",
+      });
+    }
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
+
+const unblockingUser = async (req, res, next) => {
+  try {
+    // user to be blocked
+    const userToUnBlock = await User.findById(req.params.id);
+    // user who is blocking
+    const userWhoTryingToUnblock = await User.findById(req.userAuth);
+    if (userWhoTryingToUnblock && userToUnBlock) {
+      // verify is the user already exist in blocked arr
+      const isUserAlreadyBlocked = userWhoTryingToUnblock.blocked.find(
+        (blocked) => blocked.toString() === userToUnBlock._id.toString()
+      );
+      if (!isUserAlreadyBlocked) {
+        return next(errorHandler("you have not blocked this profile"));
+      }
+      // push the userToBlock in the userWhoTryingToBlock's viewers
+
+      userWhoTryingToUnblock.blocked = userWhoTryingToUnblock.blocked.filter(
+        (blocked) => blocked.toString() !== userToUnBlock._id.toString()
+      );
+      // save in the database
+
+      await userWhoTryingToUnblock.save();
+      res.json({
+        status: "success",
+        data: " unblock User",
+      });
+    }
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
 const getUser = async (req, res, next) => {
   try {
     const token = getTokenFromHeader(req);
@@ -240,4 +302,6 @@ module.exports = {
   whoViewMyProfile,
   following,
   unfollowing,
+  blockingUser,
+  unblockingUser,
 };
