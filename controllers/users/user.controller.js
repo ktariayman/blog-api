@@ -232,6 +232,42 @@ const getUser = async (req, res, next) => {
   }
 };
 
+const adminBlockUser = async (req, res, next) => {
+  try {
+    const userToBlock = await User.findById(req.params.id);
+    if (!userToBlock) {
+      return next(errorHandler("User not found"));
+    }
+    if (userToBlock.isBlocked == true)
+      return next(errorHandler("User is already blocked "));
+    userToBlock.isBlocked = true;
+    await userToBlock.save();
+    res.json({
+      status: "success",
+      data: "admin block user ",
+    });
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
+const adminUnblockUser = async (req, res, next) => {
+  try {
+    const userToUnblock = await User.findById(req.params.id);
+    if (!userToUnblock) {
+      return next(errorHandler("User not found"));
+    }
+    if (userToUnblock.isBlocked == false)
+      return next(errorHandler("User is not blocked "));
+    userToUnblock.isBlocked = false;
+    await userToUnblock.save();
+    res.json({
+      status: "success",
+      data: "admin block user ",
+    });
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
 const updateUser = async (req, res, next) => {
   try {
     res.json({
@@ -304,4 +340,6 @@ module.exports = {
   unfollowing,
   blockingUser,
   unblockingUser,
+  adminBlockUser,
+  adminUnblockUser,
 };
