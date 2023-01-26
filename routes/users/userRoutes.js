@@ -16,6 +16,7 @@ const {
   adminBlockUser,
   adminUnblockUser,
 } = require("../../controllers/users/user.controller");
+const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
 const userRouter = express.Router();
 
@@ -50,11 +51,11 @@ userRouter.get("/blocking/:id", isLogin, blockingUser);
 userRouter.get("/unblocking/:id", isLogin, unblockingUser);
 //PUT/api/v1/users/admin-block/id
 
-userRouter.put("/admin-block/:id", isLogin, adminBlockUser);
+userRouter.put("/admin-block/:id", isLogin, isAdmin, adminBlockUser);
 
 //PUT/api/v1/users/admin-unblock/id
 
-userRouter.put("/admin-unblock/:id", isLogin, adminUnblockUser);
+userRouter.put("/admin-unblock/:id", isLogin, isAdmin, adminUnblockUser);
 
 //POST/api/v1/users/profile-photo-upload
 userRouter.post(
