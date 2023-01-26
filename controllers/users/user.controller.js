@@ -268,6 +268,22 @@ const adminUnblockUser = async (req, res, next) => {
     next(errorHandler(error.message));
   }
 };
+
+const getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    if (!users) {
+      return new (errorHandler("no users in the database", 400))();
+    }
+    res.json({
+      status: "success",
+      data: users,
+    });
+  } catch (error) {
+    next(errorHandler(error.message));
+  }
+};
+
 const updateUser = async (req, res, next) => {
   try {
     res.json({
@@ -332,6 +348,7 @@ module.exports = {
   userRegister,
   userLogin,
   getUser,
+  getUsers,
   updateUser,
   deleteUser,
   uploadPhotoProfile,

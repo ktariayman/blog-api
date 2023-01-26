@@ -15,6 +15,7 @@ const {
   unblockingUser,
   adminBlockUser,
   adminUnblockUser,
+  getUsers,
 } = require("../../controllers/users/user.controller");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
@@ -31,6 +32,8 @@ userRouter.post("/login", userLogin);
 //GET/api/v1/users/profile/:id
 userRouter.get("/profile", isLogin, getUser);
 
+//GET/api/v1/users
+userRouter.get("/", getUsers);
 //PUT/api/v1/users/profile/:id
 userRouter.put("/profile/:id", updateUser);
 
