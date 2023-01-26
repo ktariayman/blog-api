@@ -94,9 +94,42 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
   }
 );
 
+// full name of the user
+userSchema.virtual("fullname").get(function () {
+  return `${this.firstname} ${this.lastname}`;
+});
+
+userSchema.virtual("initials").get(function () {
+  return `${this.firstname.toUpperCase()[0]}${this.lastname.toUpperCase()[0]}`;
+});
+
+//get posts counts
+userSchema.virtual("postsCount").get(function () {
+  return this.posts.length;
+});
+// get followers count
+
+userSchema.virtual("followersCount").get(function () {
+  return this.followers.length;
+});
+// get following count
+
+userSchema.virtual("followingCount").get(function () {
+  return this.following.length;
+});
+// get viewers count
+userSchema.virtual("viewersCount").get(function () {
+  return this.viewers.length;
+});
+
+// get viewers count
+userSchema.virtual("blockedCount").get(function () {
+  return this.blocked.length;
+});
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
