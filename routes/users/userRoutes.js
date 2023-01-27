@@ -4,7 +4,7 @@ const storage = require("../../config/cloudinary");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
 const userRouter = express.Router();
-const users = require("../../controllers/users/users");
+const users = require("../../controllers/users/usersController");
 // instance of multer
 const upload = multer({ storage });
 //POST/api/v1/users/register
