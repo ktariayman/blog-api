@@ -1,70 +1,68 @@
 const express = require("express");
 const multer = require("multer");
 const storage = require("../../config/cloudinary");
-const {
-  userRegister,
-  userLogin,
-  getUser,
-  updateUser,
-  deleteUser,
-  uploadPhotoProfile,
-  whoViewMyProfile,
-  following,
-  unfollowing,
-  blockingUser,
-  unblockingUser,
-  adminBlockUser,
-  adminUnblockUser,
-  getUsers,
-} = require("../../controllers/users/user.controller");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
 const userRouter = express.Router();
-
+const users = require("../../controllers/users/users");
 // instance of multer
 const upload = multer({ storage });
 //POST/api/v1/users/register
-userRouter.post("/register", userRegister);
+userRouter.post("/register", users.controllers.userRegister);
 
 //POST/api/v1/users/login
-userRouter.post("/login", userLogin);
+userRouter.post("/login", users.controllers.userLogin);
 
 //GET/api/v1/users/profile/:id
-userRouter.get("/profile", isLogin, getUser);
+userRouter.get("/profile", isLogin, users.controllers.getUser);
 
 //GET/api/v1/users
-userRouter.get("/", getUsers);
+userRouter.get("/", users.controllers.getUsers);
 //PUT/api/v1/users/profile/:id
-userRouter.put("/profile/:id", updateUser);
+userRouter.put("/profile/:id", users.controllers.updateUser);
 
 //DELETE/api/v1/users/profile/:id
-userRouter.delete("/profile/:id", deleteUser);
+userRouter.delete("/profile/:id", users.controllers.deleteUser);
 
 //GET/api/v1/users/profile-viewers/id
-userRouter.get("/profile-viewers/:id", isLogin, whoViewMyProfile);
+userRouter.get(
+  "/profile-viewers/:id",
+  isLogin,
+  users.controllers.whoViewMyProfile
+);
 
 //GET/api/v1/users/following/id
-userRouter.get("/following/:id", isLogin, following);
+userRouter.get("/following/:id", isLogin, users.controllers.following);
 //GET/api/v1/users/unfollowing/id
-userRouter.get("/unfollowing/:id", isLogin, unfollowing);
+userRouter.get("/unfollowing/:id", isLogin, users.controllers.unfollowing);
 //GET/api/v1/users/blocking/id
 
-userRouter.get("/blocking/:id", isLogin, blockingUser);
+userRouter.get("/blocking/:id", isLogin, users.controllers.blockingUser);
 //GET/api/v1/users/unblocking/id
-userRouter.get("/unblocking/:id", isLogin, unblockingUser);
+userRouter.get("/unblocking/:id", isLogin, users.controllers.unblockingUser);
 //PUT/api/v1/users/admin-block/id
 
-userRouter.put("/admin-block/:id", isLogin, isAdmin, adminBlockUser);
+userRouter.put(
+  "/admin-block/:id",
+  isLogin,
+  isAdmin,
+  users.controllers.adminBlockUser
+);
 
 //PUT/api/v1/users/admin-unblock/id
 
-userRouter.put("/admin-unblock/:id", isLogin, isAdmin, adminUnblockUser);
+userRouter.put(
+  "/admin-unblock/:id",
+  isLogin,
+  isAdmin,
+  users.controllers.adminUnblockUser
+);
 
 //POST/api/v1/users/profile-photo-upload
 userRouter.post(
   "/profile-photo-upload",
   isLogin,
   upload.single("profile"),
-  uploadPhotoProfile
+  users.controllers.uploadPhotoProfile
 );
 module.exports = userRouter;
