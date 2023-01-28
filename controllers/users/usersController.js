@@ -11,6 +11,7 @@ const adminBlockUser = require("../../services/users/adminBlockUserService");
 const adminUnblockUser = require("../../services/users/adminUnblockUserService");
 const uploadPhotoProfile = require("../../services/users/uploadPhotoProfileService");
 const updateUser = require("../../services/users/updateUserService");
+const updateUserPassword = require("../../services/users/updateUserPasswordService");
 const deleteUser = require("../../services/users/deleteUserService");
 
 exports.controllers = {
@@ -19,6 +20,7 @@ exports.controllers = {
   getUser,
   getUsers,
   updateUser,
+  updateUserPassword,
   deleteUser,
   whoViewMyProfile,
   blockingUser,

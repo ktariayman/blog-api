@@ -18,11 +18,18 @@ userRouter.get("/profile", isLogin, users.controllers.getUser);
 
 //GET/api/v1/users
 userRouter.get("/", users.controllers.getUsers);
-//PUT/api/v1/users/profile/:id
-userRouter.put("/profile/:id", users.controllers.updateUser);
+//PUT/api/v1/users/profile
+userRouter.put("/profile", isLogin, users.controllers.updateUser);
+
+//PUT/api/v1/users/profile/password
+userRouter.put(
+  "/profile/password",
+  isLogin,
+  users.controllers.updateUserPassword
+);
 
 //DELETE/api/v1/users/profile/:id
-userRouter.delete("/profile/:id", users.controllers.deleteUser);
+userRouter.delete("/profile", isLogin, users.controllers.deleteUser);
 
 //GET/api/v1/users/profile-viewers/id
 userRouter.get(
