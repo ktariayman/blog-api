@@ -85,7 +85,7 @@ const userSchema = new mongoose.Schema(
         "Bronze",
         "Silver",
         "Gold",
-        "Platinum ",
+        "Platinum",
         "Diamond",
         "Legendary",
       ],
@@ -97,6 +97,115 @@ const userSchema = new mongoose.Schema(
     toJSON: { virtuals: true },
   }
 );
+
+//User Model Hooks
+
+userSchema.pre("findOne", async function (next) {
+  // populate all the posts
+  this.populate("posts");
+  // the user id
+  const userId = this._conditions._id;
+  // Posts created by the users
+  const postFound = await Post.find({ user: userId });
+  // the last post by the user
+  const lastPost = postFound[postFound.length - 1];
+  // the last post date
+  const lastPostDate = new Date(lastPost && lastPost.createdAt);
+  const lastPostDateString = lastPostDate.toDateString();
+  userSchema.virtual("lastPostDate").get(function () {
+    return lastPostDateString;
+  });
+  next();
+
+  // check is user is inactive or not for 7days
+
+  // getCurrentDate
+  const diff = new Date() - lastPostDate;
+  const diffOfDays = diff / (1000 * 3600 * 24);
+
+  // last active date of the user based on the posts
+  // conver days to int
+  const daysAgo = Math.floor(diffOfDays);
+  userSchema.virtual("lastActive").get(function () {
+    if (daysAgo === 0) return "Today";
+    if (daysAgo === 1) return "Yesterday";
+    return `${daysAgo} days ago`;
+  });
+
+  // get the numbers of posts
+  const numbersOfPosts = postFound.length;
+  if (numbersOfPosts < 1) {
+    await User.findByIdAndUpdate(userId, { userAward: "Iron" }, { new: true });
+  }
+  if (numbersOfPosts >= 1 && numbersOfPosts < 2) {
+    await User.findByIdAndUpdate(
+      userId,
+      { userAward: "Bronze" },
+      { new: true }
+    );
+  }
+  if (numbersOfPosts >= 2 && numbersOfPosts < 5) {
+    await User.findByIdAndUpdate(
+      userId,
+      { userAward: "Silver" },
+      { new: true }
+    );
+  }
+  if (numbersOfPosts >= 5 && numbersOfPosts < 10) {
+    await User.findByIdAndUpdate(userId, { userAward: "Gold" }, { new: true });
+  }
+  if (numbersOfPosts >= 10 && numbersOfPosts < 15) {
+    await User.findByIdAndUpdate(
+      userId,
+      { userAward: "Platinum" },
+      { new: true }
+    );
+  }
+  if (numbersOfPosts >= 15 && numbersOfPosts < 20) {
+    await User.findByIdAndUpdate(
+      userId,
+      { userAward: "Diamond" },
+      { new: true }
+    );
+  }
+  if (numbersOfPosts >= 20) {
+    await User.findByIdAndUpdate(
+      userId,
+      { userAward: "Diamond" },
+      { new: true }
+    );
+  }
+
+  if (diffOfDays > 7) {
+    userSchema.virtual("isInactive").get(function () {
+      return true;
+    });
+    const user = await User.findById(userId);
+    if (user && !user.isBlocked) user.isBlocked = true;
+    await user.save();
+    // await User.findByIdAndUpdate(
+    //   userId,
+    //   {
+    //     isBlocked: true,
+    //   },
+    //   { new: true }
+    // );
+  } else {
+    userSchema.virtual("isInactive").get(function () {
+      return false;
+    });
+    const user = await User.findById(userId);
+    if (user && user.isBlocked) user.isBlocked = false;
+    await user.save();
+    // await User.findByIdAndUpdate(
+    //   userId,
+    //   {
+    //     isBlocked: false,
+    //   },
+    //   { new: true }
+    // );
+  }
+});
 
 // full name of the user
 userSchema.virtual("fullname").get(function () {
