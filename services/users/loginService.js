@@ -9,11 +9,9 @@ const userLogin = async (req, res, next) => {
     const userExist = await User.findOne({ email });
     if (!userExist)
       return next(new ErrorHandler("Invalid Login credentials ", 500));
-
     const passwordMatch = await bcrypt.compare(password, userExist.password);
     if (!passwordMatch) {
-      if (!userExist)
-        return next(new ErrorHandler("Invalid Login credentials ", 500));
+      return next(new ErrorHandler("Invalid Login credentials ", 500));
     }
     res.json({
       status: "success",

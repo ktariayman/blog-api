@@ -12,7 +12,7 @@ const getUser = async (req, res, next) => {
       data: user,
     });
   } catch (error) {
-    next(ErrorHandler(error.message));
+    next(errorHandler(error.message));
   }
 };
 
