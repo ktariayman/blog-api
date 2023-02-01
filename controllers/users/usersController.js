@@ -13,7 +13,9 @@ const uploadPhotoProfile = require("../../services/users/uploadPhotoProfileServi
 const updateUser = require("../../services/users/updateUserService");
 const updateUserPassword = require("../../services/users/updateUserPasswordService");
 const deleteUser = require("../../services/users/deleteUserService");
-
+const adminDeleteUser = require("../../services/users/adminDeleteUserService");
+const adminUpdateRoleToIsAdmin = require("../../services/users/adminUpdateRoleToIsAdmin");
+const adminUpdateRoleToIsNotAdmin = require("../../services/users/adminUpdateRoleToIsNotAdmin");
 exports.controllers = {
   userLogin,
   userRegister,
@@ -30,4 +32,7 @@ exports.controllers = {
   adminUnblockUser,
   unfollowing,
   uploadPhotoProfile,
+  adminDeleteUser,
+  adminUpdateRoleToIsAdmin,
+  adminUpdateRoleToIsNotAdmin,
 };

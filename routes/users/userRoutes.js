@@ -56,13 +56,40 @@ userRouter.put(
   users.controllers.adminBlockUser
 );
 
-//PUT/api/v1/users/admin-unblock/id
+//PUT/api/v1/users/admin-unblock/:id
 
 userRouter.put(
   "/admin-unblock/:id",
   isLogin,
   isAdmin,
   users.controllers.adminUnblockUser
+);
+
+//DELETE/api/v1/users/admin-delete/:id
+
+userRouter.delete(
+  "/admin-delete/:id",
+  isLogin,
+  isAdmin,
+  users.controllers.adminDeleteUser
+);
+
+//PUT/api/v1/users/admin-update-is-admin/:id
+
+userRouter.put(
+  "/admin-update-is-admin/:id",
+  isLogin,
+  isAdmin,
+  users.controllers.adminUpdateRoleToIsAdmin
+);
+
+//PUT/api/v1/users/admin-update-is-not-admin/:id
+
+userRouter.put(
+  "/admin-update-is-not-admin/:id",
+  isLogin,
+  isAdmin,
+  users.controllers.adminUpdateRoleToIsNotAdmin
 );
 
 //POST/api/v1/users/profile-photo-upload
