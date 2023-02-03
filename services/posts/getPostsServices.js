@@ -4,9 +4,12 @@ const { errorHandler } = require("../../utils/ErrorHandler");
 
 const getPosts = async (req, res) => {
   try {
+    const posts = await Post.find({})
+      .populate("users")
+      .populate("category", "title");
     res.json({
       status: "success",
-      data: "all posts",
+      data: posts,
     });
   } catch (error) {
     res.json(error.message);
