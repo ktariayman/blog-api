@@ -17,7 +17,7 @@ userRouter.post("/login", users.controllers.userLogin);
 userRouter.get("/profile", isLogin, users.controllers.getUser);
 
 //GET/api/v1/users
-userRouter.get("/", users.controllers.getUsers);
+userRouter.get("/", isLogin, users.controllers.getUsers);
 //PUT/api/v1/users/profile
 userRouter.put("/profile", isLogin, users.controllers.updateUser);
 
