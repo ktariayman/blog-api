@@ -67,7 +67,13 @@
   - [Create comment](#Create-Comment)
   - [Update post](#Update-Comment)
   - [Delete post](#Delete-Comment)
-
+  
+- [Categories](#Categories-API-Reference)
+  - [Get All Categories](#Get-Categories)
+  - [Get Single Category](#Get-Category)
+  - [Create Category](#Create-Category)
+  - [Update Category](#Update-Category)
+  - [Delete Category](#Delete-Category)
 ## Run Locally
 
 Clone the project
